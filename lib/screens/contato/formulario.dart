@@ -1,55 +1,71 @@
 import 'package:flutter/material.dart';
+
 import '../../components/editor.dart';
 import '../../models/contato.dart';
 
 class FormularioContato extends StatefulWidget {
-  final TextEditingController _controladorCampoNome =
-      TextEditingController();
-  final TextEditingController _controladorCampoTelefone =
-      TextEditingController();
-  final TextEditingController _controladorCampoEmail =
-      TextEditingController();
+  final Contato? contato;
+
+  const FormularioContato({super.key, this.contato});
 
   @override
-  State<StatefulWidget> createState() {
-    return FormularioContatoState();
-  }
+  State<FormularioContato> createState() => FormularioContatoState();
 }
 
 class FormularioContatoState extends State<FormularioContato> {
-  static const _tituloAppBar = 'Adicionar Contato';
   static const _rotuloNome = 'Nome';
-  static const _dicaNome = 'Ex: João Silva';
+  static const _dicaNome = 'Ex: Joao Silva';
   static const _rotuloTelefone = 'Telefone';
   static const _dicaTelefone = '(11) 99999-9999';
   static const _rotuloEmail = 'Email';
   static const _dicaEmail = 'exemplo@email.com';
-  static const _textBotaoConfirmar = 'Salvar';
+
+  late final TextEditingController _controladorCampoNome;
+  late final TextEditingController _controladorCampoTelefone;
+  late final TextEditingController _controladorCampoEmail;
+
+  bool get _editando => widget.contato != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _controladorCampoNome = TextEditingController(text: widget.contato?.nome);
+    _controladorCampoTelefone = TextEditingController(text: widget.contato?.telefone);
+    _controladorCampoEmail = TextEditingController(text: widget.contato?.email);
+  }
+
+  @override
+  void dispose() {
+    _controladorCampoNome.dispose();
+    _controladorCampoTelefone.dispose();
+    _controladorCampoEmail.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_tituloAppBar),
+        title: Text(_editando ? 'Atualizar Contato' : 'Adicionar Contato'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Editor(
-              controlador: widget._controladorCampoNome,
+              controlador: _controladorCampoNome,
               rotulo: _rotuloNome,
               dica: _dicaNome,
               icone: Icons.person,
             ),
             Editor(
-              controlador: widget._controladorCampoTelefone,
+              controlador: _controladorCampoTelefone,
               rotulo: _rotuloTelefone,
               dica: _dicaTelefone,
               icone: Icons.phone,
               tipoTeclado: TextInputType.phone,
             ),
             Editor(
-              controlador: widget._controladorCampoEmail,
+              controlador: _controladorCampoEmail,
               rotulo: _rotuloEmail,
               dica: _dicaEmail,
               icone: Icons.email,
@@ -57,16 +73,13 @@ class FormularioContatoState extends State<FormularioContato> {
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ElevatedButton(
-                child: Text(_textBotaoConfirmar),
-                onPressed: () {
-                  _criaContato(
-                    context,
-                    widget._controladorCampoNome,
-                    widget._controladorCampoTelefone,
-                    widget._controladorCampoEmail,
-                  );
-                },
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.save),
+                  label: Text(_editando ? 'Atualizar' : 'Salvar'),
+                  onPressed: _salvarContato,
+                ),
               ),
             ),
           ],
@@ -74,22 +87,27 @@ class FormularioContatoState extends State<FormularioContato> {
       ),
     );
   }
-}
 
-void _criaContato(
-  BuildContext context,
-  TextEditingController controladorCampoNome,
-  TextEditingController controladorCampoTelefone,
-  TextEditingController controladorCampoEmail,
-) {
-  final String nome = controladorCampoNome.text;
-  final String telefone = controladorCampoTelefone.text;
-  final String email = controladorCampoEmail.text;
+  void _salvarContato() {
+    final nome = _controladorCampoNome.text.trim();
+    final telefone = _controladorCampoTelefone.text.trim();
+    final email = _controladorCampoEmail.text.trim();
 
-  if (nome.isNotEmpty && telefone.isNotEmpty && email.isNotEmpty) {
-    final contatoCriado = Contato(nome, telefone, email);
-    debugPrint("Criando Contato...");
-    debugPrint("$contatoCriado");
-    Navigator.pop(context, contatoCriado);
+    if (nome.isEmpty || telefone.isEmpty || email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha todos os campos.')),
+      );
+      return;
+    }
+
+    Navigator.pop(
+      context,
+      Contato(
+        id: widget.contato?.id,
+        nome: nome,
+        telefone: telefone,
+        email: email,
+      ),
+    );
   }
 }

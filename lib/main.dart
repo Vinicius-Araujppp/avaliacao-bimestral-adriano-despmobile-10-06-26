@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/contato/lista.dart';
+import 'screens/dashboard.dart';
 
-void main() => runApp(ContatosApp());
+void main() => runApp(const ContatosApp());
 
 class ContatosApp extends StatelessWidget {
   const ContatosApp({super.key});
@@ -9,7 +9,8 @@ class ContatosApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ListaContatos(),
+      debugShowCheckedModeBanner: false,
+      home: const Dashboard(),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(

@@ -7,7 +7,14 @@ class Editor extends StatelessWidget {
   final IconData? icone;
   final TextInputType? tipoTeclado;
 
-  Editor({this.controlador, this.rotulo, this.dica, this.icone, this.tipoTeclado = TextInputType.text});
+  const Editor({
+    super.key,
+    this.controlador,
+    this.rotulo,
+    this.dica,
+    this.icone,
+    this.tipoTeclado = TextInputType.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +22,7 @@ class Editor extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: TextField(
         controller: controlador,
-        style: TextStyle(fontSize: 25),
+        style: const TextStyle(fontSize: 18),
         decoration: InputDecoration(
           icon: icone != null ? Icon(icone) : null,
           labelText: rotulo,
