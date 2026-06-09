@@ -4,9 +4,10 @@ Projeto mobile em Flutter com CRUD completo de contatos, persistencia local com 
 
 ## Participantes 
 
-# Nome:Vinicius de Araújo Silva
-# Nome:Thiago Archete Cunha
-# Nome:Paulo Ricardo Alvino de Azevedo
+<p> Nome:Vinicius de Araújo Silva </p> 
+<p> Nome:Thiago Archete Cunha </p> 
+<p> Nome:Paulo Ricardo Alvino de Azevedo </p>
+
 
 
 
